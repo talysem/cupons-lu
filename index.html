@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupons da Lu</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script defer type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script defer src="index.js"></script>
+</head>
+
+<body>
+
+    <div id="siteLu">
+
+        <div id="mainInfos" data-bind="with: infos">
+            <div id="mainImage" data-bind="style: { background: foto }">
+                <img data-bind="attr: { src: foto }">
+            </div>
+            <h1 data-bind="text: titulo"></h1>
+            <p id="bioText" data-bind="text: bio"></p>
+
+            <div id="social_logos">
+                <a class="social_logo" data-bind="attr: { href: 'https://instagram.com/' + instagram }">
+                    <svg width="auto" height="auto" viewBox="0 0 228 228" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M53.4702 0.988258C43.5502 2.24426 37.4052 4.23126 30.1972 8.51626C18.4332 15.5083 6.79123 29.7873 3.43023 41.3493C0.55423 51.2413 0.0312291 62.1353 0.00122907 112.875C-0.0307709 166.253 0.542232 176.787 4.06523 187.539C9.42323 203.893 25.2382 219.414 41.5432 224.321C51.9982 227.467 64.8182 227.999 120.97 227.614C172.337 227.261 176.991 227.087 183.47 225.275C197.947 221.226 211.134 211.062 219.185 197.747C227.552 183.908 228.224 176.767 227.73 106.849C227.368 55.5923 227.189 50.8143 225.388 44.3493C220.25 25.9063 205.285 9.68226 188.06 3.87926C184.816 2.78626 178.181 1.43626 173.316 0.879257C162.549 -0.354743 63.3622 -0.263742 53.4702 0.988258ZM57.4702 20.9313C53.6202 21.3833 48.4732 22.4603 46.0322 23.3233C35.1512 27.1723 24.3902 39.3033 21.7772 50.6663C19.8092 59.2223 19.9022 167.787 21.8852 176.732C23.7622 185.199 29.5892 193.836 37.2092 199.446C48.1902 207.53 54.2942 208.123 120.97 207.589C178.708 207.126 179.275 207.07 188.979 200.843C197.386 195.448 203.27 187.44 205.785 177.97C207.731 170.642 208.739 74.2613 207.034 58.4783C205.692 46.0483 202.766 39.4713 195.346 32.2033C188.126 25.1303 181.534 22.1293 170.47 20.8813C159.877 19.6863 67.7232 19.7263 57.4702 20.9313ZM171.995 42.5763C169.67 43.7623 168.06 45.5703 167.133 48.0373C165.89 51.3413 165.94 52.1193 167.608 55.5183C171.486 63.4183 182.218 63.2873 185.555 55.2993C189.253 46.4503 180.499 38.2373 171.995 42.5763ZM98.1722 53.8103C86.8402 56.8733 79.4472 61.2743 70.4662 70.3033C61.2902 79.5273 56.8492 87.0913 53.9452 98.4453C50.2892 112.74 51.8942 127.721 58.5752 141.664C61.4022 147.564 64.1412 151.229 70.3642 157.443C83.8782 170.936 98.6962 176.569 117.97 175.54C134.267 174.671 147.166 168.593 158.922 156.246C186.179 127.618 179.836 81.1743 145.863 60.6323C136.526 54.9863 128.331 52.6813 115.97 52.2253C107.733 51.9213 103.897 52.2633 98.1722 53.8103ZM106.078 72.9313C98.6932 74.3813 89.6892 79.2313 84.4192 84.5963C60.4872 108.961 73.7002 148.713 107.841 155.062C112.519 155.932 115.534 155.909 120.71 154.962C154.45 148.791 167.422 108.454 143.374 84.4883C133.166 74.3153 119.925 70.2113 106.078 72.9313Z"
+                            fill="black" />
+                    </svg>
+                </a>
+
+                <a class="social_logo" data-bind="attr: { href: 'https://tiktok.com/@' + tiktok }">
+                    <svg width="auto" height="auto" viewBox="0 0 203 234" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M105.804 86.25L105.532 172.5L102.752 178.161C96.448 190.997 82.182 198.201 67.687 195.867C49.33 192.911 37.616 176.772 40.187 157.978C41.684 147.032 47.869 138.794 59.032 132.883C62.928 130.82 64.908 130.5 73.782 130.5H84.032V109.857C84.032 91.956 83.822 89.133 82.45 88.607C81.58 88.273 77.2861 88 72.9081 88C41.781 88 14.34 107.367 3.48104 137C-0.207957 147.067 -1.13795 166.273 1.52805 177.312C6.67805 198.635 20.547 216.248 39.532 225.576C51.716 231.562 59.135 233.307 72.532 233.336C86.093 233.366 93.297 231.633 105.986 225.288C122.564 216.998 135.421 201.914 141.602 183.5C145.015 173.333 145.89 159.163 145.972 112.75C146.005 94.188 146.202 79 146.411 79C146.619 79 149.372 80.555 152.528 82.456C164.387 89.597 180.675 94.894 195.782 96.523L202.032 97.196V77.727V58.258L196.929 57.581C189.081 56.54 176.739 51.623 168.913 46.421C155.64 37.597 146.602 22.411 144.47 5.353L143.802 0H124.938H106.075L105.804 86.25Z"
+                            fill="black" />
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+
+        <div id="cards" data-bind="foreach: cupons">
+
+            <div class="card">
+                <img data-bind="attr: { src: imagem }">
+
+                <div class="card_data">
+                    <span class="brand" data-bind="text: marca"></span>
+
+                    <span class="discount" data-bind="text: desconto"></span>
+                    <span class="freight" data-bind="visible: freteGratis">+ Frete grátis</span>
+
+                    <div class="card_data_copy">
+                        <div class="cupom" data-bind="text: cupom, click: $parent.copiarCupom"></div>
+                        <div class="button" data-bind="click: $parent.copiarCupom">Copiar</div>
+                    </div>
+
+                    <a class="button main_button" data-bind="attr: { href: site }">
+                        Visitar site
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="toast" data-bind="css: { show: toastVisible }">
+        <span data-bind="text: toastMessage"></span>
+    </div>
+
+</body>
+
+</html>
