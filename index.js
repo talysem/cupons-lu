@@ -105,41 +105,68 @@ function ViewModel() {
 
 
 
-
-  async function compartilhar(item) {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Cupons da Lu',
-          text: `Cupom ${item.cupom} - ${item.desconto} na ${item.marca}!`,
-          url: item.site
-        });
-      } catch (err) {
-        console.log('Compartilhamento cancelado ou falhou:', err);
-      }
-    } else {
-      console.log('Web Share API não suportada neste navegador.');
-    }
-  }
-
+  self.compartilhar = compartilhar;
   self.compartilharPagina = compartilharPagina;
 
-  async function compartilharPagina() {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Cupons da Lu',
-          text: 'Cupons legais para meninas legais S2',
-          url: window.location.href
-        });
-      } catch (err) {
-        console.log('Compartilhamento cancelado ou falhou:', err);
-      }
-    } else {
-      console.log('Web Share API não suportada neste navegador.');
+  async function getShareFile() {
+    try {
+      const response = await fetch('whatsapp_share_image.jpg');
+      const blob = await response.blob();
+      return new File([blob], 'whatsapp_share_image.jpg', { type: blob.type });
+    } catch (err) {
+      console.log('Não foi possível carregar imagem de compartilhamento:', err);
+      return null;
     }
   }
 
+  async function compartilharPagina() {
+    const infosAtual = self.infos();
+
+    const shareData = {
+      title: infosAtual.titulo,
+      text: infosAtual.bio,
+      url: window.location.href
+    };
+
+    const file = await getShareFile();
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      shareData.files = [file];
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Compartilhamento cancelado ou falhou:', err);
+      }
+    }
+  }
+
+  async function compartilhar(item) {
+    const infosAtual = self.infos();
+
+    const shareData = {
+      title: infosAtual.titulo,
+      text: `Cupom ${item.cupom} - ${item.desconto} na ${item.marca}!`,
+      url: item.site
+    };
+
+    const file = await getShareFile();
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      shareData.files = [file];
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Compartilhamento cancelado ou falhou:', err);
+      }
+    }
+  }
+
+
+  
 }
 
 document.addEventListener('DOMContentLoaded', () => {
