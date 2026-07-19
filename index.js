@@ -6,7 +6,11 @@ function ViewModel() {
     titulo: '',
     bio: '',
     instagram: '',
-    tiktok: ''
+    tiktok: '',
+    mostrarInfosCargoEmpresa: false,
+    nome: '',
+    cargo: '',
+    empresa: ''
   });
 
   const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzDrEFfTqlRK7wGUKDmRcH8zg2X7f4PJJvySkUdQKm-xFPvkygw-Z3dTF514d3rDhnaaSWTiWcB-X-/pub';
@@ -41,7 +45,11 @@ function ViewModel() {
         titulo: item.Título,
         bio: item.Bio,
         instagram: item.Instagram,
-        tiktok: item.Tiktok
+        tiktok: item.Tiktok,
+        mostrarInfosCargoEmpresa: item.Mostrar_infos_cargo_empresa === 'Sim',
+        nome: item.Nome,
+        cargo: item.Cargo,
+        empresa: item.Empresa
       });
     })
     .catch(err => console.error('Erro ao buscar aba Infos:', err));
@@ -72,8 +80,83 @@ function ViewModel() {
       })
       .catch(err => console.error('Erro ao copiar cupom:', err));
   };
+
+
+  self.filtroMarca = ko.observable('');
+  self.filtroFrete = ko.observable(false);
+
+  self.cuponsFiltrados = ko.computed(function () {
+    return self.cupons().filter(function (item) {
+      const passaMarca = !self.filtroMarca() || item.marca === self.filtroMarca();
+      const passaFrete = !self.filtroFrete() || item.freteGratis;
+      return passaMarca && passaFrete;
+    });
+  });
+
+  self.marcasDisponiveis = ko.computed(function () {
+    const marcas = self.cupons().map(item => item.marca);
+    return [...new Set(marcas)].sort();
+  });
+
+  self.semResultados = ko.computed(function () {
+    return self.cuponsFiltrados().length === 0;
+  });
+
+
+
+
+
+  async function compartilhar(item) {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Cupons da Lu',
+          text: `Cupom ${item.cupom} - ${item.desconto} na ${item.marca}!`,
+          url: item.site
+        });
+      } catch (err) {
+        console.log('Compartilhamento cancelado ou falhou:', err);
+      }
+    } else {
+      console.log('Web Share API não suportada neste navegador.');
+    }
+  }
+
+  self.compartilharPagina = compartilharPagina;
+
+  async function compartilharPagina() {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Cupons da Lu',
+          text: 'Cupons legais para meninas legais S2',
+          url: window.location.href
+        });
+      } catch (err) {
+        console.log('Compartilhamento cancelado ou falhou:', err);
+      }
+    } else {
+      console.log('Web Share API não suportada neste navegador.');
+    }
+  }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   ko.applyBindings(new ViewModel());
 });
+
+const botaoTopo = document.getElementById('voltarTopo');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) {
+    botaoTopo.classList.add('show');
+  } else {
+    botaoTopo.classList.remove('show');
+  }
+});
+
+botaoTopo.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
