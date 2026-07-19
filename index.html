@@ -20,6 +20,11 @@
 
 <body>
 
+    <div id="loading" data-bind="visible: carregando">
+        <div class="spinner"></div>
+        <img id="img_loader" src="favicon.png" alt="Cupons da Luu">
+    </div>
+
     <div id="siteLu">
 
         <div id="mainInfos" data-bind="with: infos">
@@ -132,7 +137,13 @@
         <!--sem resultados nos filtros-->
 
         <div class="sem-resultados" data-bind="visible: semResultados">
-            Nenhum cupom encontrado com esses filtros.
+            <p>
+                Poxa, parece que não há resultados para essa combinação de filtros...
+            </p>
+
+            <p>Tente uma nova combinação ;)</p>
+
+            <img src="cat.jpg" alt="Gatinho triste">
         </div>
 
         <!--sem resultados nos filtros-->

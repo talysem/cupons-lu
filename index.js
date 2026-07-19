@@ -15,44 +15,46 @@ function ViewModel() {
 
   const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzDrEFfTqlRK7wGUKDmRcH8zg2X7f4PJJvySkUdQKm-xFPvkygw-Z3dTF514d3rDhnaaSWTiWcB-X-/pub';
 
-  // Aba Cupons (gid=0)
-  fetch(`${baseUrl}?gid=0&single=true&output=csv`)
-    .then(res => res.text())
-    .then(csv => {
-      const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-      const data = parsed.data.map(item => ({
-        cupom: item.Cupom,
-        marca: item.Marca,
-        desconto: item.Desconto,
-        freteGratis: item.Frete === 'Sim',
-        regra: item.Regra,
-        site: item.Site,
-        imagem: item.Imagem
-      }));
-      self.cupons(data);
-    })
-    .catch(err => console.error('Erro ao buscar aba Cupons:', err));
+  self.carregando = ko.observable(true);
+
+  Promise.all([
+    fetch(`${baseUrl}?gid=0&single=true&output=csv`).then(res => res.text()),
+    fetch(`${baseUrl}?gid=1352179578&single=true&output=csv`).then(res => res.text())
+  ]).then(([csvCupons, csvInfos]) => {
+    const parsedCupons = Papa.parse(csvCupons, { header: true, skipEmptyLines: true });
+    self.cupons(parsedCupons.data.map(item => ({
+      cupom: item.Cupom,
+      marca: item.Marca,
+      desconto: item.Desconto,
+      freteGratis: item.Frete === 'Sim',
+      regra: item.Regra,
+      site: item.Site,
+      imagem: item.Imagem
+    })));
+
+    const parsedInfos = Papa.parse(csvInfos, { header: true, skipEmptyLines: true });
+    const item = parsedInfos.data[0] || {};
+    self.infos({
+      foto: item.Foto,
+      titulo: item.Título,
+      bio: item.Bio,
+      instagram: item.Instagram,
+      tiktok: item.Tiktok,
+      mostrarInfosCargoEmpresa: item.Mostrar_infos_cargo_empresa === 'Sim',
+      nome: item.Nome,
+      cargo: item.Cargo,
+      empresa: item.Empresa
+    });
+  }).catch(err => {
+    console.error('Erro ao carregar dados:', err);
+  }).finally(() => {
+    self.carregando(false);
+  });
 
 
-  // Aba Infos (gid=1352179578)
-  fetch(`${baseUrl}?gid=1352179578&single=true&output=csv`)
-    .then(res => res.text())
-    .then(csv => {
-      const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-      const item = parsed.data[0] || {};
-      self.infos({
-        foto: item.Foto,
-        titulo: item.Título,
-        bio: item.Bio,
-        instagram: item.Instagram,
-        tiktok: item.Tiktok,
-        mostrarInfosCargoEmpresa: item.Mostrar_infos_cargo_empresa === 'Sim',
-        nome: item.Nome,
-        cargo: item.Cargo,
-        empresa: item.Empresa
-      });
-    })
-    .catch(err => console.error('Erro ao buscar aba Infos:', err));
+
+
+
 
   self.copiarCupom = function (item) {
     navigator.clipboard.writeText(item.cupom)
@@ -166,7 +168,7 @@ function ViewModel() {
   }
 
 
-  
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
