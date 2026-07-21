@@ -112,9 +112,9 @@ function ViewModel() {
 
   async function getShareFile() {
     try {
-      const response = await fetch('whatsapp_share_image.jpg');
+      const response = await fetch('share_image.jpg');
       const blob = await response.blob();
-      return new File([blob], 'whatsapp_share_image.jpg', { type: blob.type });
+      return new File([blob], 'share_image.jpg', { type: blob.type });
     } catch (err) {
       console.log('Não foi possível carregar imagem de compartilhamento:', err);
       return null;
