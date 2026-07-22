@@ -148,7 +148,7 @@ function ViewModel() {
     const shareData = {
       title: infosAtual.titulo,
       text: `Cupom ${item.cupom} - ${item.desconto} na ${item.marca}!`,
-      url: item.site
+      url: window.location.href
     };
 
     const file = await getShareFile();
