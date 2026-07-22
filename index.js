@@ -2,7 +2,6 @@ function ViewModel() {
   var self = this;
   self.cupons = ko.observableArray([]);
   self.infos = ko.observable({
-    foto: '',
     titulo: '',
     bio: '',
     instagram: '',
@@ -35,7 +34,6 @@ function ViewModel() {
     const parsedInfos = Papa.parse(csvInfos, { header: true, skipEmptyLines: true });
     const item = parsedInfos.data[0] || {};
     self.infos({
-      foto: item.Foto,
       titulo: item.Título,
       bio: item.Bio,
       instagram: item.Instagram,
